@@ -49,5 +49,5 @@ func (a *articleRepository) UpdateArticle(article *model.Articles) error {
 
 func (a *articleRepository) DeleteArticle(id int) error {
 	var article model.Articles
-	return a.db.Table(article.TableName()).Delete(nil, id).Error
+	return a.db.Delete(&article, id).Error
 }

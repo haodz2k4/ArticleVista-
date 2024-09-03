@@ -64,3 +64,16 @@ func (h *ArticleHandler) UpdateArtilce(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"article": article})
 }
+
+func (h *ArticleHandler) DeleteArticle(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	if err := h.service.DeleteArticle(id); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Delete article successfully"})
+}
