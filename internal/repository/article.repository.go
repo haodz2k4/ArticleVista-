@@ -43,7 +43,7 @@ func (a *articleRepository) GetAllArticles() ([]model.Articles, error) {
 }
 
 func (a *articleRepository) UpdateArticle(article *model.Articles) error {
-	return a.db.Save(&article).Error
+	return a.db.Where("id = ?", article.Id).Updates(&article).Error
 
 }
 

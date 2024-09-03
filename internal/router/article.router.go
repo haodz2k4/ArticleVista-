@@ -15,4 +15,5 @@ func RegisterArticleRoutes(rg *gin.RouterGroup, db *gorm.DB) {
 
 	rg.POST("", articleHandle.CreateArticle)
 	rg.GET("", articleHandle.GetAllArticles)
+	rg.PATCH("/:id", articleHandle.UpdateArtilce)
 }

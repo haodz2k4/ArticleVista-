@@ -3,8 +3,10 @@ package handler
 import (
 	"ArticleVista/internal/model"
 	"ArticleVista/internal/service"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type ArticleHandler struct {
@@ -37,4 +39,28 @@ func (h *ArticleHandler) GetAllArticles(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"articles": articles})
+}
+
+func (h *ArticleHandler) UpdateArtilce(c *gin.Context) {
+	fmt.Println(c)
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	var article model.Articles
+
+	article.Id = id
+
+	if err := c.ShouldBind(&article); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	if err := h.service.UpdateArticle(&article); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"article": article})
 }
