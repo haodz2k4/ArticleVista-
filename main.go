@@ -12,4 +12,5 @@ func main() {
 		log.Fatalln("Cannot connect to database: ", err.Error())
 	}
 	fmt.Println(db)
+
 }
