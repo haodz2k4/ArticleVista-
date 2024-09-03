@@ -1,9 +1,6 @@
 package router
 
 import (
-	"ArticleVista/internal/handler"
-	"ArticleVista/internal/repository"
-	"ArticleVista/internal/service"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -11,13 +8,8 @@ import (
 func SetUpRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 
-	articleRepo := repository.NewArticleRepository(db)
-	articleService := service.NewArticleService(articleRepo)
-	articleHandle := handler.NewArticleHandler(articleService)
-	r.Group("/articles")
-	{
-		r.POST("", articleHandle.CreateArticle)
-	}
+	articleGroup := r.Group("/articles")
+	RegisterArticleRoutes(articleGroup, db)
 
 	return r
 }

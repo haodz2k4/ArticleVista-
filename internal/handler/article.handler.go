@@ -27,3 +27,14 @@ func (h *ArticleHandler) CreateArticle(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"article": article})
 }
+
+func (h *ArticleHandler) GetAllArticles(c *gin.Context) {
+
+	articles, err := h.service.GetAllArticles()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot get article", "error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"articles": articles})
+}
