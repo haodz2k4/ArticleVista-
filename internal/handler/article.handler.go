@@ -23,6 +23,12 @@ func (h *ArticleHandler) CreateArticle(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot be create article", "error": err.Error()})
 		return
 	}
+
+	if err := service.ValidateArticle(&article); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"validation_error": err.Error()})
+		return
+	}
+
 	if err := h.service.CreateArticle(&article); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "cannot be create article", "error": err.Error()})
 		return

@@ -3,6 +3,7 @@ package service
 import (
 	"ArticleVista/internal/model"
 	"ArticleVista/internal/repository"
+	"github.com/go-playground/validator/v10"
 )
 
 type ArticleService interface {
@@ -12,6 +13,18 @@ type ArticleService interface {
 	UpdateArticle(article *model.Articles) error
 	DeleteArticle(id int) error
 }
+
+// Validate
+var validate *validator.Validate
+
+func init() {
+	validate = validator.New()
+}
+
+func ValidateArticle(article *model.Articles) error {
+	return validate.Struct(article)
+}
+
 type articleService struct {
 	repo repository.ArticleRepository
 }
