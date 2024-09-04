@@ -13,6 +13,10 @@ type ArticleRepository interface {
 	DeleteArticle(id int) error
 }
 
+type GetArticleOptions struct {
+	Filter map[string]interface{}
+}
+
 type articleRepository struct {
 	db *gorm.DB
 }
