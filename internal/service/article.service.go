@@ -9,9 +9,10 @@ import (
 type ArticleService interface {
 	CreateArticle(article *model.Articles) error
 	GetArticleById(id int) (*model.Articles, error)
-	GetAllArticles() ([]model.Articles, error)
+	GetAllArticles(option repository.GetArticleOptions) ([]model.Articles, error)
 	UpdateArticle(article *model.Articles) error
 	DeleteArticle(id int) error
+	GetTotalDocument() (int64, error)
 }
 
 // Validate
@@ -40,8 +41,8 @@ func (s *articleService) GetArticleById(id int) (*model.Articles, error) {
 	return s.repo.GetArticleById(id)
 }
 
-func (s *articleService) GetAllArticles() ([]model.Articles, error) {
-	return s.repo.GetAllArticles()
+func (s *articleService) GetAllArticles(option repository.GetArticleOptions) ([]model.Articles, error) {
+	return s.repo.GetAllArticles(option)
 }
 
 func (s *articleService) UpdateArticle(article *model.Articles) error {
@@ -50,4 +51,8 @@ func (s *articleService) UpdateArticle(article *model.Articles) error {
 
 func (s *articleService) DeleteArticle(id int) error {
 	return s.repo.DeleteArticle(id)
+}
+
+func (s *articleService) GetTotalDocument() (int64, error) {
+	return s.repo.GetTotalDocument()
 }

@@ -3,10 +3,13 @@ package handler
 import (
 	"ArticleVista/internal/common"
 	"ArticleVista/internal/model"
+	"ArticleVista/internal/repository"
 	"ArticleVista/internal/service"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type ArticleHandler struct {
@@ -37,8 +40,36 @@ func (h *ArticleHandler) CreateArticle(c *gin.Context) {
 }
 
 func (h *ArticleHandler) GetAllArticles(c *gin.Context) {
+	var option repository.GetArticleOptions
 
-	articles, err := h.service.GetAllArticles()
+	if title := c.Query("title"); title != "" {
+		if option.Filter == nil {
+			option.Filter = make(map[string]interface{})
+		}
+		option.Filter["title"] = title
+	}
+	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, err := strconv.Atoi(c.DefaultQuery("limit", "30"))
+
+	totalDocument, err := h.service.GetTotalDocument()
+	if err != nil {
+		c.Error(common.NewAppError(http.StatusBadRequest, "cannot be get total: "+err.Error()))
+	}
+	option.Pagination = *common.NewPagination(page, limit, totalDocument)
+
+	//sorting
+	sort := c.Query("sort")
+	if sort != "" {
+		option.Sort = sort
+	}
+
+	//select Fields
+	selectField := c.Query("only")
+	if selectField != "" {
+		option.SelectField = strings.Split(selectField, " ")
+	}
+	fmt.Println(option)
+	articles, err := h.service.GetAllArticles(option)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "cannot get article", "error": err.Error()})
 		return
