@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"ArticleVista/internal/common"
 	"ArticleVista/internal/model"
 	"ArticleVista/internal/service"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -48,10 +48,10 @@ func (h *ArticleHandler) GetAllArticles(c *gin.Context) {
 }
 
 func (h *ArticleHandler) UpdateArtilce(c *gin.Context) {
-	fmt.Println(c)
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		c.Error(common.NewAppError(http.StatusBadRequest, "invalid cache id"))
 		return
 	}
 
